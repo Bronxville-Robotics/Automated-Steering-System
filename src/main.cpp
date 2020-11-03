@@ -8,6 +8,11 @@
 /*----------------------------------------------------------------------------*/
 
 // ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Drivetrain           drivetrain    1, 2            
+// RotatingRangeMotor   motor         3               
+// RangeFinder          distance      4               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
