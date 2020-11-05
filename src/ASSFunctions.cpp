@@ -8,6 +8,18 @@ static int refreshRate = 60;
 std::vector<bool> scan() {
   std::vector<bool> data;
 
+  Rotator.resetPosition();
+  int numDataPts = 12;
+
+  for(int i = 0; i < numDataPts; i++) {
+    
+    data.push_back(Range.foundObject());
+    Rotator.rotateTo(360 / numDataPts * i, degrees, true);
+    //Brain.Screen.print(i);
+  }
+
+  Rotator.rotateTo(360, degrees, false);
+
   return data;
 }
 
@@ -27,6 +39,11 @@ void driveUntilWall() {
   Drivetrain.stop();
 
   std::vector<bool> data = scan();
-  turnToPath(data);
+  for (std::vector<bool>::const_iterator i = data.begin(); i != data.end(); i++) {
+    Brain.Screen.print(*i);
+    //Brain.Screen.print(" ");
+  }
+  
+  //turnToPath(data);
 }
 

@@ -4,7 +4,7 @@ extern brain Brain;
 
 // VEXcode devices
 extern drivetrain Drivetrain;
-extern motor RotatingRangeMotor;
+extern motor Rotator;
 extern sonar Range;
 
 /**

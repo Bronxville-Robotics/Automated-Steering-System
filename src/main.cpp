@@ -11,7 +11,7 @@
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Drivetrain           drivetrain    1, 2            
-// RotatingRangeMotor   motor         3               
+// Rotator              motor         3               
 // Range                sonar         A, B            
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
