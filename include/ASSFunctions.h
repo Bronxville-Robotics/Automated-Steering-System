@@ -3,7 +3,7 @@
 
 std::vector<bool> scan();
 
-void turnToPath(std::vector<bool>);
+void turnToPath(std::vector<bool> data);
 
 void driveUntilWall();
 

@@ -15,7 +15,6 @@ std::vector<bool> scan() {
     
     data.push_back(Range.foundObject());
     Rotator.rotateTo(360 / numDataPts * i, degrees, true);
-    //Brain.Screen.print(i);
   }
 
   Rotator.rotateTo(360, degrees, false);
@@ -23,7 +22,7 @@ std::vector<bool> scan() {
   return data;
 }
 
-void turnToPath(std::vector<bool>) {
+void turnToPath(std::vector<bool> data) {
 
 }
 
