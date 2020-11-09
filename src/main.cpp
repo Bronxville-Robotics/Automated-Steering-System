@@ -22,7 +22,6 @@ Can we do different levels of scan based on distance away?
 
 #include "vex.h"
 #include "ASSFunctions.h"
-#include <iostream>
 
 using namespace vex;
 

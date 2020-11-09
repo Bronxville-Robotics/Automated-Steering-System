@@ -4,12 +4,12 @@
 using namespace vex;
 
 static int refreshRate = 60;
+static int numDataPts = 12;
 
 std::vector<bool> scan() {
   std::vector<bool> data;
 
   Rotator.resetPosition();
-  int numDataPts = 12;
 
   for(int i = 0; i < numDataPts; i++) {
     
@@ -22,7 +22,8 @@ std::vector<bool> scan() {
   return data;
 }
 
-double findTurnAngle(std::vector<bool> data, double degreesOfScanSeparation) {
+double findTurnAngle(std::vector<bool> data) {
+  double degreesOfScanSeparation = 360.0 / numDataPts;
 
   int run = 0;
   int longestRun = 0;
@@ -74,7 +75,6 @@ void turnToAngle(double angle) {
 }
 
 void ASSInit() {
-
   driveUntilWall();
 
   std::vector<bool> data = scan();
@@ -82,8 +82,7 @@ void ASSInit() {
     Brain.Screen.print(*i);
   }
 
-  double turnAngle = findTurnAngle(data, 30);
-
+  double turnAngle = findTurnAngle(data);
   turnToAngle(turnAngle);
 }
 
