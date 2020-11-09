@@ -15,6 +15,11 @@
 // Range                sonar         A, B            
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
+/*
+Can we classify different parts of the hallway based on scan characteristics?
+Can we do different levels of scan based on distance away?
+*/
+
 #include "vex.h"
 #include "ASSFunctions.h"
 #include <iostream>

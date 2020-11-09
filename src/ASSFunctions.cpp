@@ -23,8 +23,39 @@ std::vector<bool> scan() {
   return data;
 }
 
-void turnToPath(std::vector<bool>) {
+void turnToPath(std::vector<bool> data) {
 
+  int run = 0;
+  int longestRun = 0;
+  int begin = 0;
+
+  for(int i = 0; i < data.size(); i++) {
+
+    if(!data.at(i)) {
+
+      run++;
+    }
+
+    else {
+
+      if(run > longestRun) {
+
+        longestRun = run;
+        begin = i - run;
+      }
+
+      run = 0;
+    }
+  }
+
+  if(run > longestRun) {
+
+    longestRun = run;
+    begin = data.size() - run;
+  }
+
+  int angle = (longestRun * 30/2) + (begin * 30);
+  Drivetrain.turnFor(angle, degrees, true);
 }
 
 void driveUntilWall() {
