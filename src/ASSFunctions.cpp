@@ -22,7 +22,7 @@ std::vector<bool> scan() {
   return data;
 }
 
-void turnToPath(std::vector<bool> data) {
+double findTurnAngle(std::vector<bool> data, double degreesOfScanSeparation) {
 
   int run = 0;
   int longestRun = 0;
@@ -53,8 +53,7 @@ void turnToPath(std::vector<bool> data) {
     begin = data.size() - run;
   }
 
-  int angle = (longestRun * 30/2) + (begin * 30);
-  Drivetrain.turnFor(angle, degrees, true);
+  return (longestRun * degreesOfScanSeparation/2) + (begin * degreesOfScanSeparation);
 }
 
 void driveUntilWall() {
@@ -67,13 +66,24 @@ void driveUntilWall() {
   }
 
   Drivetrain.stop();
+}
+
+void turnToAngle(double angle) {
+
+  Drivetrain.turnFor(angle, degrees, true);
+}
+
+void ASSInit() {
+
+  driveUntilWall();
 
   std::vector<bool> data = scan();
   for (std::vector<bool>::const_iterator i = data.begin(); i != data.end(); i++) {
     Brain.Screen.print(*i);
-    //Brain.Screen.print(" ");
   }
-  
-  //turnToPath(data);
+
+  double turnAngle = findTurnAngle(data, 30);
+
+  turnToAngle(turnAngle);
 }
 
