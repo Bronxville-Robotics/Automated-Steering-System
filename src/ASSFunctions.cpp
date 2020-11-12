@@ -17,7 +17,7 @@ std::vector<bool> scan() {
     Rotator.rotateTo(360 / numDataPts * i, degrees, true);
   }
 
-  Rotator.rotateTo(360, degrees, false);
+  Rotator.rotateTo(0, degrees, false);
 
   return data;
 }
@@ -75,15 +75,18 @@ void turnToAngle(double angle) {
 
 void ASSInit() {
 
-  driveUntilWall();
+  for(int i = 0; i < 10; i++) {
+  
+    driveUntilWall();
 
-  std::vector<bool> data = scan();
-  for (std::vector<bool>::const_iterator i = data.begin(); i != data.end(); i++) {
-    Brain.Screen.print(*i);
+    std::vector<bool> data = scan();
+    for (std::vector<bool>::const_iterator i = data.begin(); i != data.end(); i++) {
+      Brain.Screen.print(*i);
+    }
+
+    double turnAngle = findTurnAngle(data, 30);
+
+    turnToAngle(turnAngle);
   }
-
-  double turnAngle = findTurnAngle(data, 30);
-
-  turnToAngle(turnAngle);
 }
 
