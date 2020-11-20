@@ -17,7 +17,7 @@ std::vector<bool> scan() {
     Rotator.rotateTo(360 / numDataPts * i, degrees, true);
   }
 
-  Rotator.rotateTo(360, degrees, false);
+  Rotator.rotateTo(0, degrees, false);
 
   return data;
 }

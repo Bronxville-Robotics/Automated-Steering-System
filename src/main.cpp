@@ -10,7 +10,7 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Drivetrain           drivetrain    12, 11          
+// Drivetrain           drivetrain    2, 9            
 // Rotator              motor         10              
 // Range                sonar         A, B            
 // ---- END VEXCODE CONFIGURED DEVICES ----
@@ -29,5 +29,8 @@ int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  ASSInit();
+  for(int i = 0; i < 12; i++) {
+  
+    ASSInit();
+  }
 }
