@@ -1,9 +1,5 @@
 #include <vector>
 #include "vex.h"
 
-std::vector<bool> scan();
-
-void turnToPath(std::vector<bool> data);
-
-void driveUntilWall();
-
+//Begins Automated Steering System
+void ASSInit();
