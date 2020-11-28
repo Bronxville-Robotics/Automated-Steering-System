@@ -1,5 +1,7 @@
 #include "vex.h"
 #include <vector>
+#include <algorithm>
+#include <cmath>
 
 using namespace vex;
 
@@ -22,39 +24,18 @@ std::vector<bool> scan() {
   return data;
 }
 
-double findTurnAngle(std::vector<bool> data) {
-  double degreesOfScanSeparation = 360.0 / numDataPts;
+double findTurnAngle(std::vector<bool> data) { //needs to be vector<double> v and erase first line after
+  vector<double> v=data.replace(data.begin(), data.end(), 0, -1);
+  vector<double> vNew(v.size());
 
-  int run = 0;
-  int longestRun = 0;
-  int begin = 0;
-
-  for(int i = 0; i < data.size(); i++) {
-
-    if(!data.at(i)) {
-
-      run++;
+  for(int i = 0; i < v.size(); i++) {
+    for(int j = 0; j < v.size(); j++) {
+      vNew[i] += 1 / (std::abs(v.size() / 2.0 + i + j) + v.size() / 2.0) * v[j];
     }
-
-    else {
-
-      if(run > longestRun) {
-
-        longestRun = run;
-        begin = i - run;
-      }
-
-      run = 0;
-    }
+    vNew[i] += v.size()/2.0 - std::abs(i - v.size() / 2.0);
   }
 
-  if(run > longestRun) {
-
-    longestRun = run;
-    begin = data.size() - run;
-  }
-
-  return (longestRun * degreesOfScanSeparation/2) + (begin * degreesOfScanSeparation);
+  return find(vNew.begin(), vNew.end(), std::min_element(vNew.begin(), vNew.end())) / vNew.size() * 360; //needs to be double * 360, then round
 }
 
 void driveUntilWall() {
