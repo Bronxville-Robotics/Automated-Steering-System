@@ -24,18 +24,28 @@ std::vector<bool> scan() {
   return data;
 }
 
-double findTurnAngle(std::vector<bool> data) { //needs to be vector<double> v and erase first line after
-  vector<double> v=data.replace(data.begin(), data.end(), 0, -1);
-  vector<double> vNew(v.size());
+double findTurnAngle(std::vector<bool> data) { 
+  int sz = data.size();
+  vector<double> v(sz);
+  vector<double> vNew(sz);
 
-  for(int i = 0; i < v.size(); i++) {
-    for(int j = 0; j < v.size(); j++) {
-      vNew[i] += 1 / (std::abs(v.size() / 2.0 + i + j) + v.size() / 2.0) * v[j];
+  for(int i = 0; i < sz; i++) {
+    if(data[i]) {
+      v[i] = 1;
     }
-    vNew[i] += v.size()/2.0 - std::abs(i - v.size() / 2.0);
+    else {
+      v[i] = -1;
+    }
   }
 
-  return find(vNew.begin(), vNew.end(), std::min_element(vNew.begin(), vNew.end())) / vNew.size() * 360; //needs to be double * 360, then round
+  for(int i = 0; i < sz; i++) {
+    for(int j = 0; j < sz; j++) {
+      vNew[i] += 1 / (std::abs(sz / 2.0 + i + j) + sz / 2.0) * v[j];
+    }
+    vNew[i] += sz / 2.0 - std::abs(i - sz / 2.0);
+  }
+
+  return double(std::min_element(vNew.begin(), vNew.end()) - vNew.begin()) / sz * 360;
 }
 
 void driveUntilWall() {
