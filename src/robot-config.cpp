@@ -8,8 +8,8 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-motor LeftDriveSmart = motor(PORT12, ratio18_1, false);
-motor RightDriveSmart = motor(PORT11, ratio18_1, true);
+motor LeftDriveSmart = motor(PORT2, ratio18_1, false);
+motor RightDriveSmart = motor(PORT9, ratio18_1, true);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 319.19, 295, 40, mm, 1);
 motor Rotator = motor(PORT10, ratio18_1, false);
 sonar Range = sonar(Brain.ThreeWirePort.A);
