@@ -1,7 +1,10 @@
 #include "vex.h"
 #include <vector>
+#include <algorithm>
+#include <cmath>
 
 using namespace vex;
+using namespace std;
 
 static int refreshRate = 60;
 static int numDataPts = 12;
@@ -22,39 +25,30 @@ std::vector<bool> scan() {
   return data;
 }
 
-double findTurnAngle(std::vector<bool> data) {
-  double degreesOfScanSeparation = 360.0 / numDataPts;
+double findTurnAngle(std::vector<bool> data) { 
+  const double k = 1.0 / 6;
+  int sz = data.size();
+  vector<double> v(sz);
+  vector<double> vNew(sz);
 
-  int run = 0;
-  int longestRun = 0;
-  int begin = 0;
-
-  for(int i = 0; i < data.size(); i++) {
-
-    if(!data.at(i)) {
-
-      run++;
+  for(int i = 0; i < sz; i++) {
+    if(data[i]) {
+      v[i] = 1;
     }
-
     else {
-
-      if(run > longestRun) {
-
-        longestRun = run;
-        begin = i - run;
-      }
-
-      run = 0;
+      v[i] = -1;
     }
   }
 
-  if(run > longestRun) {
-
-    longestRun = run;
-    begin = data.size() - run;
+  for(int i = 0; i < sz; i++) {
+    for(int j = 0; j < sz; j++) {
+      vNew[i] += pow((std::abs(i - j) - sz / 2.0) / (sz / 2.0), 2) * v[j]; //passing absolute difference of iterators through quadratic function f(x)=(x-sz/2)^2 / (sz/2)^2 (where x is abs diff iterators, / (sz/2)^2 is to keep quadratic between 0 and 1 (over range [0,sz) )).
+    }
+    vNew[i] = vNew[i] / sz; //keeps the range between approximately -1/3 and approximately 1/3 for sz>10.
+    vNew[i] += pow((i - sz / 2.0) / (sz / 2.0), 2) * k; //applying the same equation as before but this time to prioritize the frontmost values (increase the backmost element of vNew by 1*k, increase the frontmost element by 0*k). 
   }
 
-  return (longestRun * degreesOfScanSeparation/2) + (begin * degreesOfScanSeparation);
+  return double(std::min_element(vNew.begin(), vNew.end()) - vNew.begin()) / sz * 360; //return angle of minimum value in Vnew.
 }
 
 void driveUntilWall() {
