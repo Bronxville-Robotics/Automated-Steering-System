@@ -4,6 +4,7 @@
 #include <cmath>
 
 using namespace vex;
+using namespace std;
 
 static int refreshRate = 60;
 static int numDataPts = 12;
