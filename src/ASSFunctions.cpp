@@ -25,6 +25,7 @@ std::vector<bool> scan() {
 }
 
 double findTurnAngle(std::vector<bool> data) { 
+  const double k = 1.0 / 6;
   int sz = data.size();
   vector<double> v(sz);
   vector<double> vNew(sz);
@@ -40,12 +41,13 @@ double findTurnAngle(std::vector<bool> data) {
 
   for(int i = 0; i < sz; i++) {
     for(int j = 0; j < sz; j++) {
-      vNew[i] += 1 / (std::abs(sz / 2.0 + i + j) + sz / 2.0) * v[j];
+      vNew[i] += pow((std::abs(i - j) - sz / 2.0) / (sz / 2.0), 2) * v[j]; //passing absolute difference of iterators through quadratic function f(x)=(x-sz/2)^2 / (sz/2)^2 (where x is abs diff iterators, / (sz/2)^2 is to keep quadratic between 0 and 1 (over range [0,sz) )).
     }
-    vNew[i] += sz / 2.0 - std::abs(i - sz / 2.0);
+    vNew[i] = vNew[i] / sz; //keeps the range between approximately -1/3 and approximately 1/3 for sz>10.
+    vNew[i] += pow((i - sz / 2.0) / (sz / 2.0), 2) * k; //applying the same equation as before but this time to prioritize the frontmost values (increase the backmost element of vNew by 1*k, increase the frontmost element by 0*k). 
   }
 
-  return double(std::min_element(vNew.begin(), vNew.end()) - vNew.begin()) / sz * 360;
+  return double(std::min_element(vNew.begin(), vNew.end()) - vNew.begin()) / sz * 360; //return angle of minimum value in Vnew.
 }
 
 void driveUntilWall() {
