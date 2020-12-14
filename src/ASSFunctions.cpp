@@ -84,7 +84,7 @@ double findTurnAngle(std::vector<bool> data) {
 
 void driveUntilWall() {
   bool objectFound = Range.foundObject();
-  Drivetrain.drive(forward, 60, rpm);
+  Drivetrain.drive(vex::forward, 60, rpm);
 
   while (!objectFound) {
     objectFound = Range.foundObject();
