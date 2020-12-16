@@ -8,6 +8,12 @@ using namespace std;
 
 static int refreshRate = 60;
 static int numDataPts = 12;
+static int detectionThresholdinCM = 60;
+
+//lowers the detection range of Range.foundObject() such that the robot is less sensitive to being near walls
+bool foundObjectWithThreshold() {
+  return Range.foundObject() && Range.distance(distanceUnits::cm) < detectionThresholdinCM;
+}
 
 std::vector<bool> scan() {
   std::vector<bool> data;
@@ -16,7 +22,7 @@ std::vector<bool> scan() {
 
   for(int i = 0; i < numDataPts; i++) {
     
-    data.push_back(Range.foundObject());
+    data.push_back(foundObjectWithThreshold());
     Rotator.rotateTo(360 / numDataPts * i, degrees, true);
   }
 
@@ -83,11 +89,11 @@ double findTurnAngle(std::vector<bool> data) {
 }
 
 void driveUntilWall() {
-  bool objectFound = Range.foundObject();
+  bool objectFound = foundObjectWithThreshold();
   Drivetrain.drive(vex::forward, 60, rpm);
 
   while (!objectFound) {
-    objectFound = Range.foundObject();
+    objectFound = foundObjectWithThreshold();
     task::sleep(1000 / refreshRate);
   }
 
@@ -95,19 +101,20 @@ void driveUntilWall() {
 }
 
 void turnToAngle(double angle) {
-
   Drivetrain.turnFor(angle, degrees, true);
 }
 
 void ASSInit() {
-  driveUntilWall();
+  while(true) {
+    driveUntilWall();
 
-  std::vector<bool> data = scan();
-  for (std::vector<bool>::const_iterator i = data.begin(); i != data.end(); i++) {
-    Brain.Screen.print(*i);
+    std::vector<bool> data = scan();
+    for (std::vector<bool>::const_iterator i = data.begin(); i != data.end(); i++) {
+      Brain.Screen.print(*i);
+    }
+
+    double turnAngle = findTurnAngle(data);
+    turnToAngle(turnAngle);
   }
-
-  double turnAngle = findTurnAngle(data);
-  turnToAngle(turnAngle);
 }
 

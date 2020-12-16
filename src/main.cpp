@@ -28,9 +28,5 @@ using namespace vex;
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-
-  for(int i = 0; i < 12; i++) {
-  
-    ASSInit();
-  }
+  ASSInit();
 }
