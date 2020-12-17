@@ -100,7 +100,17 @@ void driveUntilWall() {
   Drivetrain.stop();
 }
 
+void turnToAngle(double angle) {
 
+  if(angle <= 180) {
+    Drivetrain.turnFor(angle * -1, degrees, true);
+  }
+
+  else {
+
+    Drivetrain.turnFor(360 - angle, degrees, true);
+  }
+}
 
 void ASSInit() {
   while(true) {
