@@ -8,7 +8,7 @@ using namespace std;
 
 static int refreshRate = 60;
 static int numDataPts = 12;
-static int detectionThresholdinCM = 60;
+static int detectionThresholdInCM = 60;
 
 //lowers the detection range of Range.foundObject() such that the robot is less sensitive to being near walls
 bool foundObjectWithThreshold() {
