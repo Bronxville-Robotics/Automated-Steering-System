@@ -12,7 +12,7 @@ static int detectionThresholdInCM = 60;
 
 //lowers the detection range of Range.foundObject() such that the robot is less sensitive to being near walls
 bool foundObjectWithThreshold() {
-  return Range.foundObject() && Range.distance(distanceUnits::cm) < detectionThresholdinCM;
+  return Range.foundObject() && Range.distance(distanceUnits::cm) < detectionThresholdInCM;
 }
 
 std::vector<bool> scan() {
@@ -100,9 +100,7 @@ void driveUntilWall() {
   Drivetrain.stop();
 }
 
-void turnToAngle(double angle) {
-  Drivetrain.turnFor(angle, degrees, true);
-}
+
 
 void ASSInit() {
   while(true) {
