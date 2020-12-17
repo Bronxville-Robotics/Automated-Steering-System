@@ -6,6 +6,9 @@ extern brain Brain;
 extern drivetrain Drivetrain;
 extern motor Rotator;
 extern sonar Range;
+extern controller Controller1;
+
+int rc_auto_loop_function_Controller1();
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

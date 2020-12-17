@@ -1,7 +1,10 @@
 #include "vex.h"
 #include <vector>
+#include <cmath>
+#include <algorithm>
 
 using namespace vex;
+using namespace std;
 
 static int refreshRate = 60;
 static int numDataPts = 12;
@@ -22,44 +25,36 @@ std::vector<bool> scan() {
   return data;
 }
 
-double findTurnAngle(std::vector<bool> data) {
-  double degreesOfScanSeparation = 360.0 / numDataPts;
+double findTurnAngle(std::vector<bool> data) { 
+  const double k = 1.0 / 6;
+  int sz = data.size();
+  vector<double> v(sz);
+  vector<double> vNew(sz);
 
-  int run = 0;
-  int longestRun = 0;
-  int begin = 0;
-
-  for(int i = 0; i < data.size(); i++) {
-
-    if(!data.at(i)) {
-
-      run++;
+  for(int i = 0; i < sz; i++) {
+    if(data[i]) {
+      v[i] = 1;
     }
-
     else {
-
-      if(run > longestRun) {
-
-        longestRun = run;
-        begin = i - run;
-      }
-
-      run = 0;
+      v[i] = -1;
     }
   }
 
-  if(run > longestRun) {
-
-    longestRun = run;
-    begin = data.size() - run;
+  for(int i = 0; i < sz; i++) {
+    for(int j = 0; j < sz; j++) {
+      vNew[i] += pow((std::abs(i - j) - sz / 2.0) / (sz / 2.0), 2) * v[j];
+    }
+    vNew[i] = vNew[i] / sz;
+    vNew[i] -= std::abs(i - sz / 2.0) / (sz / 2.0) * k;
   }
 
-  return (longestRun * degreesOfScanSeparation/2) + (begin * degreesOfScanSeparation);
+  return double(std::min_element(vNew.begin(), vNew.end()) - vNew.begin()) / sz * 360;
 }
 
-void driveUntilWall() {
+//Original Drive Until Wall Function
+/*void driveUntilWall() {
   bool objectFound = Range.foundObject();
-  Drivetrain.drive(forward, 60, rpm);
+  Drivetrain.drive(vex::forward, 60, rpm);
 
   while (!objectFound) {
     objectFound = Range.foundObject();
@@ -67,22 +62,76 @@ void driveUntilWall() {
   }
 
   Drivetrain.stop();
+}*/
+
+//Backup in case the uncommented Drive to Wall does not work
+/*void driveUntilWall() {
+  bool objectFound = Range.foundObject();
+  Drivetrain.drive(vex::forward, 60, rpm);
+
+  while (!objectFound) {
+    objectFound = Range.foundObject();
+
+    if(Drivetrain.velocity(rpm) > 0) {
+
+      Drivetrain.drive(vex::forward, 60, rpm);
+    }
+    task::sleep(1000 / refreshRate);
+  }
+
+  Drivetrain.stop();
+}*/
+
+void driveUntilWall() {
+  bool objectFound = Range.foundObject();
+
+  while (!objectFound) {
+    objectFound = Range.foundObject();
+    Drivetrain.drive(vex::forward, 60, rpm);
+    task::sleep(50);
+  }
+
+  Drivetrain.stop();
 }
 
 void turnToAngle(double angle) {
 
-  Drivetrain.turnFor(angle, degrees, true);
+  Drivetrain.turnFor(angle * -1, degrees, true);
 }
 
-void ASSInit() {
-  driveUntilWall();
+//Turn to Angle Function which can turn left or right
+/*void turnToAngle(double angle) {
 
-  std::vector<bool> data = scan();
-  for (std::vector<bool>::const_iterator i = data.begin(); i != data.end(); i++) {
-    Brain.Screen.print(*i);
+  if(angle <= 180) {
+    Drivetrain.turnFor(angle * -1, degrees, true);
   }
 
-  double turnAngle = findTurnAngle(data);
-  turnToAngle(turnAngle);
+  else {
+
+    Drivetrain.turnFor(360 - angle, degrees, true);
+  }
+}*/
+
+int ASSInit() {
+  
+  while(true) {
+  
+    driveUntilWall();
+
+    Drivetrain.stop();
+
+    std::vector<bool> data = scan();
+
+    for (std::vector<bool>::const_iterator i = data.begin(); i != data.end(); i++) {
+      Brain.Screen.print(*i);
+    }
+
+    Brain.Screen.newLine();
+
+    double turnAngle = findTurnAngle(data);
+    turnToAngle(turnAngle);
+  }
+  
+  return 0;
 }
 
