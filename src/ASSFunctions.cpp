@@ -25,6 +25,8 @@ std::vector<bool> scan() {
     Rotator.rotateTo(degreeIncrement * i, rotationUnits::deg, true);
   }
 
+  Rotator.rotateTo(0, rotationUnits::deg, true);
+
   return data;
 }
 
