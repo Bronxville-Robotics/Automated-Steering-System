@@ -7,26 +7,25 @@ using namespace vex;
 using namespace std;
 
 static int refreshRate = 60;
-static int numDataPts = 12;
+static int numDataPts = 40;
 static int detectionThresholdInCM = 60;
 
 //lowers the detection range of Range.foundObject() such that the robot is less sensitive to being near walls
 bool foundObjectWithThreshold() {
-  return Range.foundObject() && Range.distance(distanceUnits::cm) < detectionThresholdinCM;
+  return Range.foundObject() && Range.distance(distanceUnits::cm) < detectionThresholdInCM;
 }
 
 std::vector<bool> scan() {
   std::vector<bool> data;
-
   Rotator.resetPosition();
+  double degreeIncrement = 360 / numDataPts;
 
   for(int i = 0; i < numDataPts; i++) {
-    
     data.push_back(foundObjectWithThreshold());
-    Rotator.rotateTo(360 / numDataPts * i, degrees, true);
+    Rotator.rotateTo(degreeIncrement * i, rotationUnits::deg, true);
   }
 
-  Rotator.rotateTo(0, degrees, false);
+  Rotator.rotateTo(0, rotationUnits::deg, true);
 
   return data;
 }
@@ -101,7 +100,14 @@ void driveUntilWall() {
 }
 
 void turnToAngle(double angle) {
-  Drivetrain.turnFor(angle, degrees, true);
+  if(angle <= 180) {
+    Drivetrain.turnFor(angle * -1, degrees, true);
+  }
+
+  else {
+
+    Drivetrain.turnFor(360 - angle, degrees, true);
+  }
 }
 
 void ASSInit() {
@@ -117,4 +123,3 @@ void ASSInit() {
     turnToAngle(turnAngle);
   }
 }
-
