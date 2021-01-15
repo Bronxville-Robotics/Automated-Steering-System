@@ -23,6 +23,12 @@ using namespace vex;
 
 std::string mode = "automatic";
 
+void stopAllOperations() {
+
+  Drivetrain.stop();
+  Rotator.rotateTo(0, rotationUnits::deg, true);
+}
+
 int setModeStatusFunction() {
 
   while(true) {
@@ -38,7 +44,7 @@ int setModeStatusFunction() {
           mode = "manual";
           Brain.Screen.newLine();
           Brain.Screen.print(mode.c_str());
-          Drivetrain.stop();
+          stopAllOperations();
           break;
         }
 
@@ -47,7 +53,7 @@ int setModeStatusFunction() {
           mode = "automatic";
           Brain.Screen.newLine();
           Brain.Screen.print(mode.c_str());
-          Drivetrain.stop();
+          stopAllOperations();
           break;
         }
       }
@@ -57,10 +63,9 @@ int setModeStatusFunction() {
 
     wait(20, msec);
   }
-  
+
   return 0;
 }
-
 
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
