@@ -38,6 +38,7 @@ int setModeStatusFunction() {
           mode = "manual";
           Brain.Screen.newLine();
           Brain.Screen.print(mode.c_str());
+          Drivetrain.stop();
           break;
         }
 
@@ -46,6 +47,7 @@ int setModeStatusFunction() {
           mode = "automatic";
           Brain.Screen.newLine();
           Brain.Screen.print(mode.c_str());
+          Drivetrain.stop();
           break;
         }
 
@@ -63,59 +65,28 @@ int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
 
-  //Automatic Drive
-  task automaticDrive(ASSInit);
-
-  //Mode Task Test
   task setMode(setModeStatusFunction);
 
-  //Manual Drive Task Test
-  task manualDrive(rc_auto_loop_function_Controller1);
-  manualDrive.suspend();
-
-  /*for(int i = 0; i < 10; i++) {
-
-    ASSInit();
-  }*/
-
-  //Test #1 --> Does this work?
-  /*while(true) {
-
-    if(mode.compare("automatic") == 0) {
-
-      manualDrive.suspend();
-      Drivetrain.stop();
-      automaticDrive.resume();
-    }
-
-    else if(mode.compare("manual") == 0) {
-
-      automaticDrive.suspend();
-      Drivetrain.stop();
-      manualDrive.resume();
-    }
-    wait(50, msec);
-  }*/
-
-  //Test #2
-  //Backup While Loop
   while(true) {
 
-    if(mode.compare("automatic") == 0) {
+    if(mode == "automatic") {
 
-      manualDrive.sleep(21);
-      Drivetrain.stop();
+      task automaticDrive(ASSInit);
+
+      while(mode == "automatic") {
+
+        wait(20, msec);
+      }
     }
 
-    else if(mode.compare("manual") == 0) {
+    else if(mode == "manual") {
 
-      automaticDrive.sleep(21);
-      Drivetrain.stop();
+      task manualDrive(rc_auto_loop_function_Controller1);
+
+      while(mode == "manual") {
+
+        wait(20, msec);
+      }
     }
-
-    wait(20, msec);
   }
-
-  //Test #3
-  //New Steering
 }
