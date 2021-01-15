@@ -8,19 +8,24 @@ using namespace std;
 
 static int refreshRate = 60;
 static int numDataPts = 12;
+static int detectionThresholdInCM = 60;
+
+//lowers the detection range of Range.foundObject() such that the robot is less sensitive to being near walls
+bool foundObjectWithThreshold() {
+  return Range.foundObject() && Range.distance(distanceUnits::cm) < detectionThresholdInCM;
+}
 
 std::vector<bool> scan() {
   std::vector<bool> data;
-
   Rotator.resetPosition();
+  double degreeIncrement = 360 / numDataPts;
 
   for(int i = 0; i < numDataPts; i++) {
-    
-    data.push_back(Range.foundObject());
-    Rotator.rotateTo(360 / numDataPts * i, degrees, true);
+    data.push_back(foundObjectWithThreshold());
+    Rotator.rotateTo(degreeIncrement * i, rotationUnits::deg, true);
   }
 
-  Rotator.rotateTo(0, degrees, false);
+  Rotator.rotateTo(0, rotationUnits::deg, true);
 
   return data;
 }
@@ -51,57 +56,19 @@ double findTurnAngle(std::vector<bool> data) {
   return double(std::min_element(vNew.begin(), vNew.end()) - vNew.begin()) / sz * 360;
 }
 
-//Original Drive Until Wall Function
-/*void driveUntilWall() {
-  bool objectFound = Range.foundObject();
-  Drivetrain.drive(vex::forward, 60, rpm);
-
-  while (!objectFound) {
-    objectFound = Range.foundObject();
-    task::sleep(1000 / refreshRate);
-  }
-
-  Drivetrain.stop();
-}*/
-
-//Backup in case the uncommented Drive to Wall does not work
-/*void driveUntilWall() {
-  bool objectFound = Range.foundObject();
-  Drivetrain.drive(vex::forward, 60, rpm);
-
-  while (!objectFound) {
-    objectFound = Range.foundObject();
-
-    if(Drivetrain.velocity(rpm) > 0) {
-
-      Drivetrain.drive(vex::forward, 60, rpm);
-    }
-    task::sleep(1000 / refreshRate);
-  }
-
-  Drivetrain.stop();
-}*/
-
 void driveUntilWall() {
-  bool objectFound = Range.foundObject();
+  bool objectFound = foundObjectWithThreshold();
+  Drivetrain.drive(vex::forward, 60, rpm);
 
   while (!objectFound) {
-    objectFound = Range.foundObject();
-    Drivetrain.drive(vex::forward, 60, rpm);
-    task::sleep(50);
+    objectFound = foundObjectWithThreshold();
+    task::sleep(1000 / refreshRate);
   }
 
   Drivetrain.stop();
 }
 
 void turnToAngle(double angle) {
-
-  Drivetrain.turnFor(angle * -1, degrees, true);
-}
-
-//Turn to Angle Function which can turn left or right
-/*void turnToAngle(double angle) {
-
   if(angle <= 180) {
     Drivetrain.turnFor(angle * -1, degrees, true);
   }
@@ -110,7 +77,7 @@ void turnToAngle(double angle) {
 
     Drivetrain.turnFor(360 - angle, degrees, true);
   }
-}*/
+}
 
 int ASSInit() {
   
@@ -134,4 +101,3 @@ int ASSInit() {
   
   return 0;
 }
-

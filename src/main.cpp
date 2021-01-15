@@ -50,13 +50,14 @@ int setModeStatusFunction() {
           Drivetrain.stop();
           break;
         }
-
-        wait(20, msec);
-        return 1;
       }
+
+      wait(20, msec);
     }
-    wait(5, msec);
+
+    wait(20, msec);
   }
+  
   return 0;
 }
 
