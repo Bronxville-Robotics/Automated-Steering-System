@@ -81,7 +81,7 @@ int main() {
 
       while(mode == "automatic") {
 
-        wait(20, msec);
+        wait(20, sec);
       }
     }
 
