@@ -4,8 +4,11 @@ extern brain Brain;
 
 // VEXcode devices
 extern drivetrain Drivetrain;
-extern motor Rotator;
-extern sonar Range;
+extern sonar RangeFinderA;
+extern sonar RangeFinderB;
+extern sonar RangeFinderC;
+extern sonar RangeFinderD;
+
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
