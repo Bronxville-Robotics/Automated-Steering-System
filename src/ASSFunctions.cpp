@@ -50,7 +50,7 @@ void ASSInit() {
     driveUntilClear();
     driveFor(driveTimeAfterNoObjectFound);
 
-    if not foundObjectWithTreshold() {
+    if (!foundObjectWithThreshold()) {
       turnToAngle(turnAngle);
       driveFor(driveTimeAfterNoObjectFound);
     }
