@@ -28,5 +28,17 @@ using namespace vex;
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  ASSInit();
+  
+  while(true) {
+
+    int distance = Range.distance(distanceUnits::cm);
+    Brain.Screen.print(distance);
+    Brain.Screen.newLine();
+    Brain.Screen.print(Range.foundObject());
+
+    wait(50, msec);
+
+    Brain.Screen.clearScreen();
+    Brain.Screen.setCursor(0,0);
+  }
 }
