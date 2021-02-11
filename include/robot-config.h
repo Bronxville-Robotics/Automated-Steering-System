@@ -4,6 +4,7 @@ extern brain Brain;
 
 // VEXcode devices
 extern drivetrain Drivetrain;
+
 extern sonar FrontLeftSonar;
 extern sonar FrontRightSonar;
 extern sonar BackLeftSonar;

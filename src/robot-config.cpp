@@ -11,6 +11,7 @@ brain  Brain;
 motor LeftDriveSmart = motor(PORT2, ratio18_1, true);
 motor RightDriveSmart = motor(PORT9, ratio18_1, false);
 drivetrain Drivetrain = drivetrain(LeftDriveSmart, RightDriveSmart, 319.19, 295, 40, mm, 1);
+
 sonar FrontLeftSonar = sonar(Brain.ThreeWirePort.A);
 sonar FrontRightSonar = sonar(Brain.ThreeWirePort.C);
 sonar BackLeftSonar = sonar(Brain.ThreeWirePort.E);
