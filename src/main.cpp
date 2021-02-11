@@ -29,16 +29,20 @@ int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   
-  while(true) {
-
-    int distance = Range.distance(distanceUnits::cm);
-    Brain.Screen.print(distance);
-    Brain.Screen.newLine();
-    Brain.Screen.print(Range.foundObject());
-
-    wait(50, msec);
-
+ // loop forever to always update the information displayed on the screen
+while(1) {
     Brain.Screen.clearScreen();
-    Brain.Screen.setCursor(0,0);
-  }
+
+    // display the sonar distance in mm on the screen
+    Brain.Screen.printAt(1, 20, "distance: %f mm", Range.distance(distanceUnits::mm));
+    
+    // display the sonar distance in mm on the screen
+    Brain.Screen.printAt(1, 40, "distance: %f in", Range.distance(distanceUnits::in));
+    
+    // display the sonar distance in mm on the screen
+    Brain.Screen.printAt(1, 60, "distance: %f cm", Range.distance(distanceUnits::cm));
+    
+    //Sleep the task for a short amount of time to prevent wasted resources.
+    task::sleep(500);
+}
 }
