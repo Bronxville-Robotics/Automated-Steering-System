@@ -21,7 +21,7 @@ void ASSInit() {
     int RotationCorrectionInDegrees; //someone needs to do the math, maybe I will. I am invisioning this to be a value == in magnitude to the angle that the robot is at in the hallway (assume walls are perfectly parallel, all 4 sensors output distances, and angle 0 is when the robot is perfectly parallel to walls)
     CorrectRotation(RotationCorrectionInDegrees);
     
-    int DistToHallCenter = round((RangeFinderB.distance(mm) + RangeFinderC.distance(mm) - RangeFinderA.distance(mm) - RangeFinderD.distance(mm)) / 4 * AcceptableErrorCoefficient); //Right direction is defined as positive. P.S. you can do the math this is what the expression comes out to be.
+    int DistToHallCenter = round((FrontRightSonar.distance(mm) + BackRightSonar.distance(mm) - FrontLeftSonar.distance(mm) - BackLeftSonar.distance(mm)) / 4 * AcceptableErrorCoefficient); //Right direction is defined as positive. P.S. you can do the math this is what the expression comes out to be.
     MoveToCenter(DistToHallCenter);
   }
 }
