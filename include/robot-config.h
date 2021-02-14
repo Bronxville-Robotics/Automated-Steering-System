@@ -4,10 +4,13 @@ extern brain Brain;
 
 // VEXcode devices
 extern drivetrain Drivetrain;
+extern motor LeftMotor;
+extern motor RightMotor;
 extern sonar RangeFinderA;
 extern sonar RangeFinderB;
 extern sonar RangeFinderC;
 extern sonar RangeFinderD;
+extern sonar RangeFinderE;
 
 
 /**
