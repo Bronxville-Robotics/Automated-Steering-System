@@ -6,12 +6,11 @@ extern brain Brain;
 extern drivetrain Drivetrain;
 extern motor LeftMotor;
 extern motor RightMotor;
-extern sonar RangeFinderA;
-extern sonar RangeFinderB;
-extern sonar RangeFinderC;
-extern sonar RangeFinderD;
-extern sonar RangeFinderE;
-
+extern sonar FrontLeftSonar;
+extern sonar FrontRightSonar;
+extern sonar BackLeftSonar;
+extern sonar BackRightSonar;
+extern sonar FrontFacingSonar;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
