@@ -46,6 +46,3 @@ void ASSInit() {
     }
   }
 }
-
-
-//example change
