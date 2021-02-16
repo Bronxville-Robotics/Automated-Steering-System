@@ -1,4 +1,4 @@
-//this line should raise an error
+this line should raise an error 2
 #include "vex.h"
 #include "math.h"
 
