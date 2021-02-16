@@ -25,6 +25,7 @@ void AdjustMotorSpeedsWithPID(int Dist) {
 }
 
 void ASSInit() {
+  //test test (for AJ's stuff)
   //I added LeftMotor and RightMotor to the robot config files in place of the previous SmartTurnSomethings. I also added FrontFacingSonar and configured it to port B which may need to be changed.
   while(true) { 
     double LengthFLS = FrontLeftSonar.distance(mm);
