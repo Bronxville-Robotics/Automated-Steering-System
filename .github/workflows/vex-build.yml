@@ -1,0 +1,14 @@
+name: VEX Build
+
+on: [push, pull_request]
+
+jobs:
+  vex-build:
+    name: VEX Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@master
+      - name: Build
+        uses: schineaj23/vex-build@v1.0
