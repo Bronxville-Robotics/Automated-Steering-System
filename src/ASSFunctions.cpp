@@ -1,4 +1,5 @@
 // this line should raise an error 2
+error 3
 #include "vex.h"
 #include "math.h"
 
