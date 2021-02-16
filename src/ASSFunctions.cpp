@@ -31,12 +31,12 @@ void ASSInit() {
     double LengthFRS = FrontRightSonar.distance(mm);
     double LengthBLS = BackLeftSonar.distance(mm);
     double LengthBRS = BackRightSonar.distance(mm);
-    int Dist = DistToTarget(LA,LB,LC,LD);
+    int Dist = DistToTarget(LengthFLS, LengthFRS, LengthBLS, LengthBRS);
 
     AdjustMotorSpeedsWithPID(Dist);
     
     //The hope with the following member functions is that every time the velocities are altered in AdjustMotorSpeedsWithPID, the motors will spin at those velocities (given the front sonar doesn't detect a wall). 
-    if not FrontFacingSonar.foundObject() {
+    if(not FrontFacingSonar.foundObject()) {
       LeftMotor.spin(fwd);
       RightMotor.spin(fwd);
     }
