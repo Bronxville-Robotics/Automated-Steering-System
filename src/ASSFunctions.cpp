@@ -1,5 +1,5 @@
 #include "vex.h"
-#include "math.h"
+#include "cmath"
 
 using namespace vex;
 using namespace std;
@@ -10,7 +10,7 @@ const int RobotLengthCM = 1; //someone needs to measure the robot length, use me
 int IntegralOfDistToTarget = 0;
 int PrevDistToTarget;
 
-int DistToTarget(int FL, int FR, int BL, int BR) {
+int DistToTarget(double FL, double FR, double BL, double BR) {
   //the arguments are the distances wrt each sensor.
   int AngleBetweenSensorsAndWall = atan(2*RobotWidthCM / (abs(FL-BL)+abs(FR-BR)));
   int HallWidthCM = sin(AngleBetweenSensorsAndWall) * ((FL+FR+BL+BR)/2+RobotWidthCM);
