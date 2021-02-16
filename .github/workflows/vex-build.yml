@@ -10,5 +10,3 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@master
-      - name: Build
-        uses: schineaj23/vex-build@v1.0
