@@ -21,6 +21,7 @@ void AdjustMotorSpeedsWithPID(int Dist) {
   //LeftMotor.setVelocity();   
   //RightMotor.setVelocity();
   //use PID (proportional integral derivative) controller to alter the speed of each driving motor wrt the other motor (don't alter the combined motor speeds). update IntegralOfDistToTarget and use that as integral componenet of PID.
+  //we should consider using a library to implement PID: https://github.com/tekdemo/MiniPID
   //update PrevDistToTarget and use it with the current Dist to approximate the derivative.
 }
 
