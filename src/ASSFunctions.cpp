@@ -4,17 +4,14 @@
 using namespace vex;
 using namespace std;
 
-const int RobotWidthCM = 1; //someone needs to measure the robot width, use metric system.
-const int RobotLengthCM = 1; //someone needs to measure the robot length, use metric system.
+const int DistBetweenSideSensorPairs = 1; //someone needs to measure the robot width in mm.
 
 int IntegralOfDistToTarget = 0;
 int PrevDistToTarget;
 
-int DistToTarget(int FL, int FR, int BL, int BR) {
-  //the arguments are the distances wrt each sensor.
-  int AngleBetweenSensorsAndWall = atan(2*RobotWidthCM / (abs(FL-BL)+abs(FR-BR)));
-  int HallWidthCM = sin(AngleBetweenSensorsAndWall) * ((FL+FR+BL+BR)/2+RobotWidthCM);
-  return 0; //someone needs to calculate the displacement from the center of the robot to the center of the hall and return it (lets say right of target is positive). You will need hall width, the angle above, one of the args, and  one robot dimension measurement.
+double DistToTarget(int FL, int FR, int BL, int BR) {
+  double AngleBetweenSensorsAndWallDeg = atan(2.0*DistBetweenSideSensorPairs / (abs(FL-BL + BR-FR)));
+  return sin(AngleBetweenSensorsAndWallDeg)/4.0 * (FR-FL + BR-BL); 
 }
 
 void AdjustMotorSpeedsWithPID(int Dist) {
@@ -31,7 +28,7 @@ void ASSInit() {
     double LengthFRS = FrontRightSonar.distance(mm);
     double LengthBLS = BackLeftSonar.distance(mm);
     double LengthBRS = BackRightSonar.distance(mm);
-    int Dist = DistToTarget(LengthFLS, LengthFRS, LengthBLS, LengthBRS);
+    double Dist = DistToTarget(LengthFLS, LengthFRS, LengthBLS, LengthBRS);
 
     AdjustMotorSpeedsWithPID(Dist);
     
