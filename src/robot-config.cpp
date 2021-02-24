@@ -8,14 +8,12 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-motor LeftMotor = motor(PORT2, ratio18_1, true);
-motor RightMotor = motor(PORT9, ratio18_1, false);
-drivetrain Drivetrain = drivetrain(LeftMotor, RightMotor, 319.19, 295, 40, mm, 1);
 sonar FrontLeftSonar = sonar(Brain.ThreeWirePort.A);
 sonar FrontRightSonar = sonar(Brain.ThreeWirePort.C);
 sonar BackLeftSonar = sonar(Brain.ThreeWirePort.E);
 sonar BackRightSonar = sonar(Brain.ThreeWirePort.G);
-sonar FrontFacingSonar = sonar(Brain.ThreeWirePort.B);
+motor LeftMotor = motor(PORT2, ratio18_1, false);
+motor RightMotor = motor(PORT9, ratio18_1, false);
 
 // VEXcode generated functions
 

@@ -77,16 +77,9 @@ void initASS() {
     errors.push_back(currentError);
     adjustMotorSpeedsWithPID(currentError);
     
-    //The hope with the following member functions is that every time the velocities are altered in AdjustMotorSpeedsWithPID, the motors will spin at those velocities (given the front sonar doesn't detect a wall). 
-    if(not FrontFacingSonar.foundObject()) {
-      LeftMotor.spin(fwd);
-      RightMotor.spin(fwd);
-    }
-    else {
-      LeftMotor.stop();
-      RightMotor.stop();
-    }
+    LeftMotor.spin(fwd);
+    RightMotor.spin(fwd);
     
-    wait(500, msec);
+    wait(100, msec);
   }
 }
