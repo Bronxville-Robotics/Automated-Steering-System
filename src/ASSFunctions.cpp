@@ -5,7 +5,7 @@
 using namespace vex;
 using namespace std;
 
-const int distanceBetweenSideSensorPairs = 1; //someone needs to measure the robot width in mm.
+const int distanceBetweenSideSensorPairs = 610; //someone needs to measure the robot width in mm.
 
 //Coefficients to weight the proportional, integral, and derivative components of PID
 //Initialized at 1 but should be determined experimentally
@@ -77,11 +77,13 @@ void initASS() {
     Brain.Screen.printAt(1, 80, "Back Right Sonar: %f mm", distanceBackRightSonar);
 
     currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
+    Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+
     errors.push_back(currentError);
     adjustMotorSpeedsWithPID(currentError);
     
-    LeftMotor.spin(fwd);
-    RightMotor.spin(fwd);
+    // LeftMotor.spin(fwd);
+    // RightMotor.spin(fwd);
     
     wait(100, msec);
   }
