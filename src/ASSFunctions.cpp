@@ -14,6 +14,7 @@ const double I = 0;
 const double D = 0;
 const double speedFactor = 1; // One factor to control slowing down/speeding up the effect of the entire PID.
 const double baseMotorSpeed = 14; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
+const double maxRpm = 30; //Rpm value we want the robot to cap out at
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
@@ -52,6 +53,10 @@ void adjustMotorSpeedsWithPID(int distance) {
   double derivative = errorDerivative();
 
   double change = (P*proportion + I*integral + D*derivative) * speedFactor;
+
+  if(change + baseMotorSpeed > maxRpm) {
+    change = maxRpm - baseMotorSpeed;
+  }
 
   LeftMotor.setVelocity(baseMotorSpeed + change, rpm);
   RightMotor.setVelocity(baseMotorSpeed - change, rpm);
