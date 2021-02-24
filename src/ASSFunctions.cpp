@@ -13,7 +13,7 @@ const double P = 1;
 const double I = 1;
 const double D = 1;
 const double speedFactor = 1; // One factor to control slowing down/speeding up the effect of the entire PID.
-const double baseMotorSpeed = 30; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
+const double baseMotorSpeed = 6; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
@@ -70,6 +70,11 @@ void initASS() {
     double distanceFrontRightSonar = FrontRightSonar.distance(mm);
     double distanceBackLeftSonar = BackLeftSonar.distance(mm);
     double distanceBackRightSonar = BackRightSonar.distance(mm);
+
+    Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
+    Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
+    Brain.Screen.printAt(1, 60, "Back Left Sonar: %f mm", distanceBackLeftSonar);
+    Brain.Screen.printAt(1, 80, "Back Right Sonar: %f mm", distanceBackRightSonar);
 
     currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
     errors.push_back(currentError);
