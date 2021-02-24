@@ -5,7 +5,7 @@
 using namespace vex;
 using namespace std;
 
-const int robotWidthInCM = 1; //someone needs to measure the robot width, use metric system.
+const int distanceBetweenSideSensorPairs = 1; //someone needs to measure the robot width in mm.
 
 //Coefficients to weight the proportional, integral, and derivative components of PID
 //Initialized at 1 but should be determined experimentally
