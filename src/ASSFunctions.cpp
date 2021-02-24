@@ -5,15 +5,15 @@
 using namespace vex;
 using namespace std;
 
-const int distanceBetweenSideSensorPairs = 1; //someone needs to measure the robot width in mm.
+const int distanceBetweenSideSensorPairs = 610; //someone needs to measure the robot width in mm.
 
 //Coefficients to weight the proportional, integral, and derivative components of PID
 //Initialized at 1 but should be determined experimentally
-const double P = 1;
-const double I = 1;
-const double D = 1;
+const double P = 0.01;
+const double I = 0;
+const double D = 0;
 const double speedFactor = 1; // One factor to control slowing down/speeding up the effect of the entire PID.
-const double baseMotorSpeed = 30; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
+const double baseMotorSpeed = 14; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
@@ -53,8 +53,8 @@ void adjustMotorSpeedsWithPID(int distance) {
 
   double change = (P*proportion + I*integral + D*derivative) * speedFactor;
 
-  RightMotor.setVelocity(baseMotorSpeed + change, rpm);
-  LeftMotor.setVelocity(baseMotorSpeed - change, rpm);
+  LeftMotor.setVelocity(baseMotorSpeed + change, rpm);
+  RightMotor.setVelocity(baseMotorSpeed - change, rpm);
   //use PID (proportional integral derivative) controller to alter the speed of each driving motor wrt the other motor (don't alter the combined motor speeds). update IntegralOfDistToTarget and use that as integral componenet of PID.
   //we should consider using a library to implement PID: https://github.com/tekdemo/MiniPID
   //update PrevDistToTarget and use it with the current Dist to approximate the derivative.
@@ -71,7 +71,14 @@ void initASS() {
     double distanceBackLeftSonar = BackLeftSonar.distance(mm);
     double distanceBackRightSonar = BackRightSonar.distance(mm);
 
+    Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
+    Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
+    Brain.Screen.printAt(1, 60, "Back Left Sonar: %f mm", distanceBackLeftSonar);
+    Brain.Screen.printAt(1, 80, "Back Right Sonar: %f mm", distanceBackRightSonar);
+
     currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
+    Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+
     errors.push_back(currentError);
     adjustMotorSpeedsWithPID(currentError);
     
