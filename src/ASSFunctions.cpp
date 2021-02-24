@@ -5,7 +5,7 @@
 using namespace vex;
 using namespace std;
 
-const int robotWidthInCM = 1; //someone needs to measure the robot width, use metric system.
+const int distanceBetweenSideSensorPairs = 1; //someone needs to measure the robot width in mm.
 
 //Coefficients to weight the proportional, integral, and derivative components of PID
 //Initialized at 1 but should be determined experimentally
@@ -39,11 +39,9 @@ double errorDerivative() {
   return currentError - previousError;
 }
 
-double distanceToTarget(double frontLeft, double frontRight, double backLeft, double backRight) {
-  //the arguments are the distances wrt each sensor.
-  int angleBetweenSensorsAndWall = atan(2*robotWidthInCM / (abs(frontLeft-backLeft)+abs(frontRight-backRight)));
-  int hallWidthInCM = sin(angleBetweenSensorsAndWall) * ((frontLeft+frontRight+backLeft+backRight)/2+robotWidthInCM);
-  return 0; //someone needs to calculate the displacement from the center of the robot to the center of the hall and return it (lets say right of target is positive). You will need hall width, the angle above, one of the args, and  one robot dimension measurement.
+double distanceToTarget(int frontLeft, int frontRight, int backLeft, int backRight) {
+  double angleBetweenSensorsAndWallInDegrees = atan(2.0*distanceBetweenSideSensorPairs / (abs(frontLeft-backLeft + backRight-frontRight)));
+  return sin(angleBetweenSensorsAndWallInDegrees)/4.0 * (frontRight-frontLeft + backRight-backLeft); 
 }
 
 //Determines the amount the motor speeds should change (in RPM) based on PID
