@@ -4,17 +4,17 @@
 using namespace vex;
 using namespace std;
 
-const int DistBetweenSideSensorPairs = 1; //someone needs to measure the robot width in mm.
+const int distanceBetweenSideSensorPairs = 1; //someone needs to measure the robot width in mm.
 
-int IntegralOfDistToTarget = 0;
-int PrevDistToTarget;
+int integralOfDistanceToTarget = 0;
+int previousDistanceToTarget;
 
-double DistToTarget(int FL, int FR, int BL, int BR) {
-  double AngleBetweenSensorsAndWallDeg = atan(2.0*DistBetweenSideSensorPairs / (abs(FL-BL + BR-FR)));
-  return sin(AngleBetweenSensorsAndWallDeg)/4.0 * (FR-FL + BR-BL); 
+double distanceToTarget(int frontLeft, int frontRight, int backLeft, int backRight) {
+  double angleBetweenSensorsAndWallInDegrees = atan(2.0*distanceBetweenSideSensorPairs / (abs(frontLeft-backLeft + backRight-frontRight)));
+  return sin(angleBetweenSensorsAndWallInDegrees)/4.0 * (frontRight-frontLeft + backRight-backLeft); 
 }
 
-void AdjustMotorSpeedsWithPID(int Dist) {
+void adjustMotorSpeedsWithPID(int distance) {
   //LeftMotor.setVelocity();   
   //RightMotor.setVelocity();
   //use PID (proportional integral derivative) controller to alter the speed of each driving motor wrt the other motor (don't alter the combined motor speeds). update IntegralOfDistToTarget and use that as integral componenet of PID.
@@ -22,16 +22,16 @@ void AdjustMotorSpeedsWithPID(int Dist) {
   //update PrevDistToTarget and use it with the current Dist to approximate the derivative.
 }
 
-void ASSInit() {
+void initASS() {
   //I added LeftMotor and RightMotor to the robot config files in place of the previous SmartTurnSomethings. I also added FrontFacingSonar and configured it to port B which may need to be changed.
   while(true) { 
-    double LengthFLS = FrontLeftSonar.distance(mm);
-    double LengthFRS = FrontRightSonar.distance(mm);
-    double LengthBLS = BackLeftSonar.distance(mm);
-    double LengthBRS = BackRightSonar.distance(mm);
-    double Dist = DistToTarget(LengthFLS, LengthFRS, LengthBLS, LengthBRS);
+    double lengthFrontLeftSonar = FrontLeftSonar.distance(mm);
+    double lengthFrontRightSonar = FrontRightSonar.distance(mm);
+    double lengthBackLeftSonar = BackLeftSonar.distance(mm);
+    double lengthBackRightSonar = BackRightSonar.distance(mm);
+    double distance = distanceToTarget(lengthFrontLeftSonar, lengthFrontRightSonar, lengthBackLeftSonar, lengthBackRightSonar);
 
-    AdjustMotorSpeedsWithPID(Dist);
+    adjustMotorSpeedsWithPID(distance);
     
     //The hope with the following member functions is that every time the velocities are altered in AdjustMotorSpeedsWithPID, the motors will spin at those velocities (given the front sonar doesn't detect a wall). 
     if(not FrontFacingSonar.foundObject()) {
