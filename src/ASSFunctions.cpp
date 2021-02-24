@@ -5,7 +5,7 @@
 using namespace vex;
 using namespace std;
 
-const int robotWidthCM = 1; //someone needs to measure the robot width, use metric system.
+const int robotWidthInCM = 1; //someone needs to measure the robot width, use metric system.
 
 //Coefficients to weight the proportional, integral, and derivative components of PID
 //Initialized at 1 but should be determined experimentally
@@ -41,8 +41,8 @@ double errorDerivative() {
 
 double distanceToTarget(double frontLeft, double frontRight, double backLeft, double backRight) {
   //the arguments are the distances wrt each sensor.
-  int angleBetweenSensorsAndWall = atan(2*robotWidthCM / (abs(frontLeft-backLeft)+abs(frontRight-backRight)));
-  int hallWidthCM = sin(angleBetweenSensorsAndWall) * ((frontLeft+frontRight+backLeft+backRight)/2+robotWidthCM);
+  int angleBetweenSensorsAndWall = atan(2*robotWidthInCM / (abs(frontLeft-backLeft)+abs(frontRight-backRight)));
+  int hallWidthInCM = sin(angleBetweenSensorsAndWall) * ((frontLeft+frontRight+backLeft+backRight)/2+robotWidthInCM);
   return 0; //someone needs to calculate the displacement from the center of the robot to the center of the hall and return it (lets say right of target is positive). You will need hall width, the angle above, one of the args, and  one robot dimension measurement.
 }
 
@@ -68,12 +68,12 @@ void initASS() {
   errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
 
   while(true) { 
-    double lengthFrontLeftSonar = FrontLeftSonar.distance(mm);
-    double lengthFrontRightSonar = FrontRightSonar.distance(mm);
-    double lengthBackLeftSonar = BackLeftSonar.distance(mm);
-    double lengthBackRightSonar = BackRightSonar.distance(mm);
+    double distanceFrontLeftSonar = FrontLeftSonar.distance(mm);
+    double distanceFrontRightSonar = FrontRightSonar.distance(mm);
+    double distanceBackLeftSonar = BackLeftSonar.distance(mm);
+    double distanceBackRightSonar = BackRightSonar.distance(mm);
 
-    currentError = distanceToTarget(lengthFrontLeftSonar, lengthFrontRightSonar, lengthBackLeftSonar, lengthBackRightSonar);
+    currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
     errors.push_back(currentError);
     adjustMotorSpeedsWithPID(currentError);
     
