@@ -5,25 +5,23 @@
 using namespace vex;
 using namespace std;
 
-const int distanceBetweenSideSensorPairs = 610; //someone needs to measure the robot width in mm.
+const int distanceBetweenSideSensorPairs = 610;
 
-//Coefficients to weight the proportional, integral, and derivative components of PID
-//Initialized at 1 but should be determined experimentally
+//Coefficients to weight the proportional, integral, and derivative components of PID.
+//Initialized at 1 but should be determined experimentally.
 const double P = 0.01;
 const double I = 0;
 const double D = 0;
 const double speedFactor = 1; // One factor to control slowing down/speeding up the effect of the entire PID.
 const double baseMotorSpeed = 14; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
-const double maxRpm = 30; //Rpm value we want the robot to cap out at
+const double maxRpm = 30; //Rpm value we want the robot to cap out at.
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
-int integralOfDistanceToTarget = 0;
-int previousDistanceToTarget;
 double currentError;
 
-//Determine the integral by summing all collected error measurments
-//Approximation of the integral
+//Determine the integral by summing all collected error measurments.
+//Approximation of the integral.
 double sumErrors() {
   double sum = 0;
   for(auto i = errors.begin(); i != errors.end(); i++) {
@@ -32,21 +30,21 @@ double sumErrors() {
   return sum;
 }
 
-//Determine the derivative by subtracting the past error measurement from the current (y2 - y1)
-//Approximation of the derivative
+//Determine the derivative by subtracting the past error measurement from the current (y2 - y1).
+//Approximation of the derivative.
 double errorDerivative() {
   double previousError = errors[errors.size() - 2];
   double currentError = errors[errors.size() - 1];
   return currentError - previousError;
 }
 
+//If the center of the robot is left of target (ie. left of hall center) returns positive distance in mm. If right of center, returns negative distance in mm.
 double distanceToTarget(int frontLeft, int frontRight, int backLeft, int backRight) {
   double angleBetweenSensorsAndWallInDegrees = atan(2.0*distanceBetweenSideSensorPairs / (abs(frontLeft-backLeft + backRight-frontRight)));
   return sin(angleBetweenSensorsAndWallInDegrees)/4.0 * (frontRight-frontLeft + backRight-backLeft); 
 }
 
-//Determines the amount the motor speeds should change (in RPM) based on PID
-//Assumes the right side of the hallway is positive and left is negative.
+//Determines the amount the motor speeds should change (in RPM) based on PID.
 void adjustMotorSpeedsWithPID(int distance) {
   double proportion = distance;
   double integral = sumErrors();
@@ -55,18 +53,15 @@ void adjustMotorSpeedsWithPID(int distance) {
   double change = (P*proportion + I*integral + D*derivative) * speedFactor;
 
   if(change + baseMotorSpeed > maxRpm) {
-    change = maxRpm - baseMotorSpeed;
+    change = maxRpm - baseMotorSpeed; 
   }
 
   LeftMotor.setVelocity(baseMotorSpeed + change, rpm);
   RightMotor.setVelocity(baseMotorSpeed - change, rpm);
-  //use PID (proportional integral derivative) controller to alter the speed of each driving motor wrt the other motor (don't alter the combined motor speeds). update IntegralOfDistToTarget and use that as integral componenet of PID.
-  //we should consider using a library to implement PID: https://github.com/tekdemo/MiniPID
-  //update PrevDistToTarget and use it with the current Dist to approximate the derivative.
+  //we should consider using a library to implement PID: https://github.com/tekdemo/MiniPID.
 }
 
 void initASS() {
-  //I added LeftMotor and RightMotor to the robot config files in place of the previous SmartTurnSomethings. I also added FrontFacingSonar and configured it to port B which may need to be changed.
   //Adds an initial reading to the errors list so that derivative and integral can be computed without error.
   errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
 
