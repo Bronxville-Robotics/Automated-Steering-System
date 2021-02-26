@@ -26,6 +26,7 @@ Can we do different levels of scan based on distance away?
 
 #include "vex.h"
 #include "ASSFunctions.h"
+#include "manual-drive.h"
 
 using namespace vex;
 
@@ -51,6 +52,7 @@ int main() {
 
     while(manualOverrideIsEnabled){
       Brain.Screen.printAt(1, 20, "Manual Steering Enabled.");
+      manualDrive();
     }
   }
 }
