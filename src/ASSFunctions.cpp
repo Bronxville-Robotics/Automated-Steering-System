@@ -11,10 +11,10 @@ const int distanceBetweenSideSensorPairs = 610; //someone needs to measure the r
 //Initialized at 1 but should be determined experimentally
 const double P = 0.01;
 const double I = 0;
-const double D = 0;
+const double D = 0.16;
 const double speedFactor = 1; // One factor to control slowing down/speeding up the effect of the entire PID.
-const double baseMotorSpeed = 14; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
-const double maxRpm = 30; //Rpm value we want the robot to cap out at
+const double baseMotorSpeed = 60; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
+const double maxRpm = 90; //Rpm value we want the robot to cap out at
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
