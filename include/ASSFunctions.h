@@ -2,4 +2,4 @@
 #include "vex.h"
 
 //Begins Automated Steering System
-void initASS();
+void triggerASS();
