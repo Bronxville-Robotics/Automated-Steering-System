@@ -14,10 +14,11 @@ sonar BackLeftSonar = sonar(Brain.ThreeWirePort.E);
 sonar BackRightSonar = sonar(Brain.ThreeWirePort.G);
 motor LeftMotor = motor(PORT2, ratio18_1, false);
 motor RightMotor = motor(PORT9, ratio18_1, true);
+controller Controller1 = controller(primary);
 
 // VEXcode generated functions
-
-
+// define variable for remote controller enable/disable
+bool RemoteControlCodeEnabled = true;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
