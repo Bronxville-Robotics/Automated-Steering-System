@@ -15,6 +15,7 @@ const double D = 0.16;
 const double speedFactor = 1; // One factor to control slowing down/speeding up the effect of the entire PID.
 const double baseMotorSpeed = 60; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
 const double maxRpm = 90; //Rpm value we want the robot to cap out at
+const double maxSonarReading = 90000; //Adjust this if it doesn't work.
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
@@ -68,7 +69,7 @@ void adjustMotorSpeedsWithPID(int distance) {
 void triggerASS() {
   //I added LeftMotor and RightMotor to the robot config files in place of the previous SmartTurnSomethings. I also added FrontFacingSonar and configured it to port B which may need to be changed.
   //Adds an initial reading to the errors list so that derivative and integral can be computed without error.
-  
+
   if (errors.empty()) {
     errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
   }
@@ -77,6 +78,13 @@ void triggerASS() {
   double distanceFrontRightSonar = FrontRightSonar.distance(mm);
   double distanceBackLeftSonar = BackLeftSonar.distance(mm);
   double distanceBackRightSonar = BackRightSonar.distance(mm);
+
+  if(distanceFrontLeftSonar > maxSonarReading) {
+    //Call Alexey's turning here for left
+  }
+  else if(distanceFrontRightSonar > maxSonarReading) {
+    //Call Alexey's turning here for right
+  }
 
   Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
   Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
