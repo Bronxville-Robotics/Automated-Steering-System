@@ -18,8 +18,8 @@ drivetrain Drivetrain = drivetrain(LeftMotor, RightMotor); //additional argument
 controller Controller1 = controller(primary);
 
 // VEXcode generated functions
-
-
+// define variable for remote controller enable/disable
+bool RemoteControlCodeEnabled = true;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

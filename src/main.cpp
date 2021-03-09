@@ -16,6 +16,7 @@
 // BackRightSonar       sonar         G, H            
 // LeftMotor            motor         2               
 // RightMotor           motor         9               
+// Controller1          controller                    
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 /*
@@ -25,11 +26,33 @@ Can we do different levels of scan based on distance away?
 
 #include "vex.h"
 #include "ASSFunctions.h"
+#include "manual-drive.h"
 
 using namespace vex;
+
+bool manualOverrideIsEnabled = true;
+
+void bPressed() {
+  manualOverrideIsEnabled = !manualOverrideIsEnabled;
+  Brain.Screen.clearScreen();
+  LeftMotor.stop();
+  RightMotor.stop();
+}
 
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  // ASSInit();
+  Controller1.ButtonB.pressed(bPressed);
+  
+  while(true) {
+    while(!manualOverrideIsEnabled) {
+      triggerASS();
+      wait(100, msec);
+    }
+
+    while(manualOverrideIsEnabled){
+      Brain.Screen.printAt(1, 20, "Manual Steering Enabled.");
+      manualDrive();
+    }
+  }
 }
