@@ -5,7 +5,9 @@
 using namespace vex;
 using namespace std;
 
-const int distanceBetweenSideSensorPairs = 1; //someone needs to measure the robot width in mm.
+const int distanceBetweenSideSensorPairs = 610;
+const int driveTimeBeforeTurn = 2000;
+const int driveTimeAfterTurn = 3000;
 
 //Coefficients to weight the proportional, integral, and derivative components of PID
 //Initialized at 1 but should be determined experimentally
@@ -60,24 +62,45 @@ void adjustMotorSpeedsWithPID(int distance) {
   //update PrevDistToTarget and use it with the current Dist to approximate the derivative.
 }
 
-void initASS() {
-  //I added LeftMotor and RightMotor to the robot config files in place of the previous SmartTurnSomethings. I also added FrontFacingSonar and configured it to port B which may need to be changed.
-  //Adds an initial reading to the errors list so that derivative and integral can be computed without error.
-  errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
+void hallToHallTurn(bool turnRight) {
+  Drivetrain.drive(vex::forward, 60, rpm);
+  task::sleep(driveTimeBeforeTurn);
+  Drivetrain.stop();
 
-  while(true) { 
-    double distanceFrontLeftSonar = FrontLeftSonar.distance(mm);
-    double distanceFrontRightSonar = FrontRightSonar.distance(mm);
-    double distanceBackLeftSonar = BackLeftSonar.distance(mm);
-    double distanceBackRightSonar = BackRightSonar.distance(mm);
-
-    currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
-    errors.push_back(currentError);
-    adjustMotorSpeedsWithPID(currentError);
-    
-    LeftMotor.spin(fwd);
-    RightMotor.spin(fwd);
-    
-    wait(100, msec);
+  if (turnRight) {
+    Drivetrain.turnFor(90, degrees, true);
   }
+  else {
+    Drivetrain.turnFor(-90, degrees, true);
+  }
+
+  Drivetrain.drive(vex::forward, 60, rpm);
+  task::sleep(driveTimeAfterTurn);
+  Drivetrain.stop();
+}
+
+void triggerASS() {
+  //Adds an initial reading to the errors list so that derivative and integral can be computed without error.
+  if (errors.empty()) {
+    errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
+  }
+
+  double distanceFrontLeftSonar = FrontLeftSonar.distance(mm);
+  double distanceFrontRightSonar = FrontRightSonar.distance(mm);
+  double distanceBackLeftSonar = BackLeftSonar.distance(mm);
+  double distanceBackRightSonar = BackRightSonar.distance(mm);
+
+  Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
+  Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
+  Brain.Screen.printAt(1, 60, "Back Left Sonar: %f mm", distanceBackLeftSonar);
+  Brain.Screen.printAt(1, 80, "Back Right Sonar: %f mm", distanceBackRightSonar);
+
+  currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
+  Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+
+  errors.push_back(currentError);
+  adjustMotorSpeedsWithPID(currentError);
+  
+  LeftMotor.spin(fwd);
+  RightMotor.spin(fwd);
 }

@@ -9,6 +9,8 @@ extern sonar BackLeftSonar;
 extern sonar BackRightSonar;
 extern motor LeftMotor;
 extern motor RightMotor;
+extern drivetrain Drivetrain;
+extern controller Controller1;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
