@@ -19,11 +19,6 @@
 // Controller1          controller                    
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
-/*
-Can we classify different parts of the hallway based on scan characteristics?
-Can we do different levels of scan based on distance away?
-*/
-
 #include "vex.h"
 #include "ASSFunctions.h"
 #include "manual-drive.h"
@@ -34,25 +29,28 @@ bool manualOverrideIsEnabled = true;
 
 void bPressed() {
   manualOverrideIsEnabled = !manualOverrideIsEnabled;
-  Brain.Screen.clearScreen();
-  LeftMotor.stop();
-  RightMotor.stop();
+
+  if(manualOverrideIsEnabled) {
+    task::stop(triggerASS);
+    Brain.Screen.clearScreen();
+    LeftMotor.stop();
+    RightMotor.stop();
+    task manualDriving(manualDrive);
+    Brain.Screen.printAt(1, 20, "Manual Steering Enabled.");
+  }
+
+  else {
+    task::stop(manualDrive);
+    Brain.Screen.clearScreen();
+    LeftMotor.stop();
+    RightMotor.stop();
+    task automaticDriving(triggerASS);
+  }
 }
 
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   Controller1.ButtonB.pressed(bPressed);
-  
-  while(true) {
-    while(!manualOverrideIsEnabled) {
-      triggerASS();
-      wait(100, msec);
-    }
-
-    while(manualOverrideIsEnabled){
-      Brain.Screen.printAt(1, 20, "Manual Steering Enabled.");
-      manualDrive();
-    }
-  }
+  task manualDriving(manualDrive);
 }
