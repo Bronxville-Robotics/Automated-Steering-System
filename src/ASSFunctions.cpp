@@ -6,8 +6,8 @@ using namespace vex;
 using namespace std;
 
 const int distanceBetweenSideSensorPairs = 610;
-const int driveTimeBeforeTurn = 2000;
-const int driveTimeAfterTurn = 3000;
+const int driveTimeBeforeTurn = 2000; //may need to be experimentally adjusted.
+const int driveTimeAfterTurn = 3000; //may need to be experimentally adjusted.
 
 //Coefficients to weight the proportional, integral, and derivative components of PID.
 //Initialized at 1 but should be determined experimentally.
@@ -17,6 +17,7 @@ const double D = 0.16;
 const double speedFactor = 1; // One factor to control slowing down/speeding up the effect of the entire PID.
 const double baseMotorSpeed = 60; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
 const double maxRpm = 90; //Rpm value we want the robot to cap out at
+const double maxSonarReading = 90000; //Adjust this if it doesn't work.
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
@@ -63,45 +64,51 @@ void adjustMotorSpeedsWithPID(int distance) {
   //we should consider using a library to implement PID: https://github.com/tekdemo/MiniPID.
 }
 
-void hallToHallTurn(bool turnRight) {
+void hallToHallTurn(int turnAngle) {
   Drivetrain.drive(vex::forward, 60, rpm);
   task::sleep(driveTimeBeforeTurn);
   Drivetrain.stop();
 
-  if (turnRight) {
-    Drivetrain.turnFor(90, degrees, true);
-  }
-  else {
-    Drivetrain.turnFor(-90, degrees, true);
-  }
+  Drivetrain.turnFor(turnAngle, degrees, true);
 
   Drivetrain.drive(vex::forward, 60, rpm);
   task::sleep(driveTimeAfterTurn);
   Drivetrain.stop();
 }
 
-void triggerASS() {
-  //Adds an initial reading to the errors list so that derivative and integral can be computed without error.
-  if (errors.empty()) {
-    errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
-  }
+int triggerASS() {
+  while(true) {
+    //Adds an initial reading to the errors list so that derivative and integral can be computed without error.
+    if (errors.empty()) {
+      errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
+    }
 
-  double distanceFrontLeftSonar = FrontLeftSonar.distance(mm);
-  double distanceFrontRightSonar = FrontRightSonar.distance(mm);
-  double distanceBackLeftSonar = BackLeftSonar.distance(mm);
-  double distanceBackRightSonar = BackRightSonar.distance(mm);
+    double distanceFrontLeftSonar = FrontLeftSonar.distance(mm);
+    double distanceFrontRightSonar = FrontRightSonar.distance(mm);
+    double distanceBackLeftSonar = BackLeftSonar.distance(mm);
+    double distanceBackRightSonar = BackRightSonar.distance(mm);
 
-  Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
-  Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
-  Brain.Screen.printAt(1, 60, "Back Left Sonar: %f mm", distanceBackLeftSonar);
-  Brain.Screen.printAt(1, 80, "Back Right Sonar: %f mm", distanceBackRightSonar);
+    if(distanceFrontLeftSonar > maxSonarReading) {  //The angles given to hallToHallTurn() may need to be switched.
+	hallToHallTurn(90);
+    }
+    else if(distanceFrontRightSonar > maxSonarReading) {
+	hallToHallTurn(-90);
+    }
 
-  currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
-  Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+    Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
+    Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
+    Brain.Screen.printAt(1, 60, "Back Left Sonar: %f mm", distanceBackLeftSonar);
+    Brain.Screen.printAt(1, 80, "Back Right Sonar: %f mm", distanceBackRightSonar);
 
-  errors.push_back(currentError);
-  adjustMotorSpeedsWithPID(currentError);
+    currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
+    Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+
+    errors.push_back(currentError);
+    adjustMotorSpeedsWithPID(currentError);
   
-  LeftMotor.spin(fwd);
-  RightMotor.spin(fwd);
+    LeftMotor.spin(fwd);
+    RightMotor.spin(fwd);
+    wait(100, msec);
+  }
+  return 1;
 }
