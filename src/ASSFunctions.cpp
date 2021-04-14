@@ -6,12 +6,12 @@ using namespace vex;
 using namespace std;
 
 const int distanceBetweenSideSensorPairs = 610;
-const int driveTimeBeforeTurn = 2000; //may need to be experimentally adjusted.
-const int driveTimeAfterTurn = 3000; //may need to be experimentally adjusted.
+const int driveTimeBeforeTurn = 4000; //may need to be experimentally adjusted.
+const int driveTimeAfterTurn = 6000; //may need to be experimentally adjusted.
 
 //Coefficients to weight the proportional, integral, and derivative components of PID.
 //Initialized at 1 but should be determined experimentally.
-const double P = 0.01;
+const double P = 0.006;
 const double I = 0;
 const double D = 0.16;
 const double speedFactor = 1; // One factor to control slowing down/speeding up the effect of the entire PID.
@@ -89,10 +89,10 @@ int triggerASS() {
     double distanceBackRightSonar = BackRightSonar.distance(mm);
 
     if(distanceFrontLeftSonar > maxSonarReading) {  //The angles given to hallToHallTurn() may need to be switched.
-	hallToHallTurn(90);
+	hallToHallTurn(180);
     }
     else if(distanceFrontRightSonar > maxSonarReading) {
-	hallToHallTurn(-90);
+	hallToHallTurn(-180);
     }
 
     Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
