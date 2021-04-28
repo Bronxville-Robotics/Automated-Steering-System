@@ -8,6 +8,7 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
+triport Expander10 = triport(PORT10);
 sonar FrontLeftSonar = sonar(Brain.ThreeWirePort.A);
 sonar FrontRightSonar = sonar(Brain.ThreeWirePort.C);
 sonar BackLeftSonar = sonar(Brain.ThreeWirePort.E);
@@ -15,6 +16,7 @@ sonar BackRightSonar = sonar(Brain.ThreeWirePort.G);
 motor LeftMotor = motor(PORT2, ratio18_1, false);
 motor RightMotor = motor(PORT9, ratio18_1, true);
 controller Controller1 = controller(primary);
+sonar FrontSonar = sonar(Expander10.G);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

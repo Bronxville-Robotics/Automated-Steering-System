@@ -17,6 +17,8 @@
 // LeftMotor            motor         2               
 // RightMotor           motor         9               
 // Controller1          controller                    
+// Expander10           triport       10              
+// FrontSonar           sonar         G, H            
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 /*

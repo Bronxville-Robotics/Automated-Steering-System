@@ -77,6 +77,7 @@ void triggerASS() {
   double distanceFrontRightSonar = FrontRightSonar.distance(mm);
   double distanceBackLeftSonar = BackLeftSonar.distance(mm);
   double distanceBackRightSonar = BackRightSonar.distance(mm);
+  double distanceFrontSonar = FrontSonar.distance(mm);
 
   Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
   Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
@@ -85,6 +86,7 @@ void triggerASS() {
 
   currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
   Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+  Brain.Screen.printAt(1, 120, "Front Sonar: %f mm", distanceFrontSonar);
 
   errors.push_back(currentError);
   adjustMotorSpeedsWithPID(currentError);
