@@ -90,6 +90,7 @@ int triggerASS() {
       double distanceFrontRightSonar = FrontRightSonar.distance(mm);
       double distanceBackLeftSonar = BackLeftSonar.distance(mm);
       double distanceBackRightSonar = BackRightSonar.distance(mm);
+      double distanceFrontSonar = FrontSonar.distance(mm);
 
       if(distanceFrontLeftSonar > maxSonarReading) {  //The angles given to hallToHallTurn() may need to be switched.
 	      hallToHallTurn(160);
@@ -105,6 +106,7 @@ int triggerASS() {
 
       currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
       Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+      Brain.Screen.printAt(1, 120, "Front Sonar: %f mm", distanceFrontSonar);
 
       errors.push_back(currentError);
       adjustMotorSpeedsWithPID(currentError);
