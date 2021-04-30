@@ -12,6 +12,7 @@ extern motor RightMotor;
 extern controller Controller1;
 extern triport Expander10;
 extern sonar FrontSonar;
+extern drivetrain Drivetrain;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
