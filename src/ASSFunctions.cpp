@@ -18,6 +18,7 @@ const double speedFactor = 1; // One factor to control slowing down/speeding up 
 const double baseMotorSpeed = 60; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
 const double maxRpm = 90; //Rpm value we want the robot to cap out at
 const double maxSonarReading = 90000; //Adjust this if it doesn't work.
+const double collisionStopDistance = 300; //Minimum distance for the front sensor before robot stops in mm
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
@@ -78,36 +79,39 @@ void hallToHallTurn(int turnAngle) {
 
 int triggerASS() {
   while(true) {
-    //Adds an initial reading to the errors list so that derivative and integral can be computed without error.
-    if (errors.empty()) {
-      errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
-    }
 
-    double distanceFrontLeftSonar = FrontLeftSonar.distance(mm);
-    double distanceFrontRightSonar = FrontRightSonar.distance(mm);
-    double distanceBackLeftSonar = BackLeftSonar.distance(mm);
-    double distanceBackRightSonar = BackRightSonar.distance(mm);
+    if(FrontSonar.distance(mm) > collisionStopDistance) {
+      //Adds an initial reading to the errors list so that derivative and integral can be computed without error.
+      if (errors.empty()) {
+        errors.push_back(distanceToTarget(FrontLeftSonar.distance(mm), FrontRightSonar.distance(mm), BackLeftSonar.distance(mm), BackRightSonar.distance(mm)));
+      }
 
-    if(distanceFrontLeftSonar > maxSonarReading) {  //The angles given to hallToHallTurn() may need to be switched.
-	hallToHallTurn(160);
-    }
-    else if(distanceFrontRightSonar > maxSonarReading) {
-	hallToHallTurn(-160);
-    }
+      double distanceFrontLeftSonar = FrontLeftSonar.distance(mm);
+      double distanceFrontRightSonar = FrontRightSonar.distance(mm);
+      double distanceBackLeftSonar = BackLeftSonar.distance(mm);
+      double distanceBackRightSonar = BackRightSonar.distance(mm);
 
-    Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
-    Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
-    Brain.Screen.printAt(1, 60, "Back Left Sonar: %f mm", distanceBackLeftSonar);
-    Brain.Screen.printAt(1, 80, "Back Right Sonar: %f mm", distanceBackRightSonar);
+      if(distanceFrontLeftSonar > maxSonarReading) {  //The angles given to hallToHallTurn() may need to be switched.
+	      hallToHallTurn(160);
+      }
+      else if(distanceFrontRightSonar > maxSonarReading) {
+	      hallToHallTurn(-160);
+      }
 
-    currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
-    Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+      Brain.Screen.printAt(1, 20, "Front Left Sonar: %f mm", distanceFrontLeftSonar);
+      Brain.Screen.printAt(1, 40, "Front Right Sonar: %f mm", distanceFrontRightSonar);
+      Brain.Screen.printAt(1, 60, "Back Left Sonar: %f mm", distanceBackLeftSonar);
+      Brain.Screen.printAt(1, 80, "Back Right Sonar: %f mm", distanceBackRightSonar);
 
-    errors.push_back(currentError);
-    adjustMotorSpeedsWithPID(currentError);
+      currentError = distanceToTarget(distanceFrontLeftSonar, distanceFrontRightSonar, distanceBackLeftSonar, distanceBackRightSonar);
+      Brain.Screen.printAt(1, 100, "Current Error: %f mm", currentError);
+
+      errors.push_back(currentError);
+      adjustMotorSpeedsWithPID(currentError);
   
-    LeftMotor.spin(fwd);
-    RightMotor.spin(fwd);
+      LeftMotor.spin(fwd);
+      RightMotor.spin(fwd);
+    }
     wait(100, msec);
   }
   return 1;
