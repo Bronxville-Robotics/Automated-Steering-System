@@ -1,3 +1,3 @@
 #include "vex.h"
 
-void manualDrive();
+int manualDrive();

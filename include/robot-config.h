@@ -9,6 +9,7 @@ extern sonar BackLeftSonar;
 extern sonar BackRightSonar;
 extern motor LeftMotor;
 extern motor RightMotor;
+extern drivetrain Drivetrain;
 extern controller Controller1;
 
 /**
