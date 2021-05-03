@@ -18,7 +18,7 @@ const double speedFactor = 1; // One factor to control slowing down/speeding up 
 const double baseMotorSpeed = 60; //Original Motor Speed is set to 30 rpm.  Should be experimentally played with.
 const double maxRpm = 90; //Rpm value we want the robot to cap out at
 const double maxSonarReading = 90000; //Adjust this if it doesn't work.
-const double collisionStopDistance = 300; //Minimum distance for the front sensor before robot stops in mm
+const double collisionStopDistance = 600; //Minimum distance for the front sensor before robot stops in mm
 
 vector<double> errors; //List of all recorded error measurements to determine integral and derivative.
 
@@ -113,6 +113,13 @@ int triggerASS() {
   
       LeftMotor.spin(fwd);
       RightMotor.spin(fwd);
+    }
+
+    else {
+
+      Drivetrain.stop();
+      double distanceFrontSonar = FrontSonar.distance(mm);
+      Brain.Screen.printAt(1, 120, "Front Sonar: %f mm", distanceFrontSonar);
     }
     wait(100, msec);
   }
